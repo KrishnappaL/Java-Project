@@ -1,68 +1,67 @@
-package codingEx1;
+package codeEx2;
 
-import java.util.Scanner;
-import java.util.Stack;
 
-class Solution{
 
-    static int minJumps(int[] arr,int n){
-        int current = n-1; //10
-        int jumps = 0;
-        while(current > 0){
-            jumps++;
-            int next = current;
-            for(int i=current-1; i>=0; i--){
-                if(i+arr[i] >= current){
-                    next = i;
-                }
+
+import java.util.*;
+
+public class Solution {
+
+    public static int[] findMissingRepeatingNumbers(int[] a) {
+        int n = a.length; // size of the array
+        int xr = 0;
+
+        //Step 1: Find XOR of all elements:
+        for (int i = 0; i < n; i++) {
+            xr = xr ^ a[i];
+            xr = xr ^ (i + 1);
+        }
+
+        //Step 2: Find the differentiating bit number:
+        int number = (xr & ~(xr - 1));
+
+        //Step 3: Group the numbers:
+        int zero = 0;
+        int one = 0;
+        for (int i = 0; i < n; i++) {
+            //part of 1 group:
+            if ((a[i] & number) != 0) {
+                one = one ^ a[i];
             }
-            if(current == next)
-                return -1;
-            current = next;
+            //part of 0 group:
+            else {
+                zero = zero ^ a[i];
+            }
         }
-        return jumps;
-    }
-    public static int equilibriumPoint(long[] arr) {
-        // Your code her
-        int n=arr.length;
-        long leftsum,rightsum;
-        for(int i=1;i<=n;i=i+1){
-            leftsum=0;
-            for(int j=1;j<i;j++)
-                leftsum=leftsum+arr[j];
-            rightsum=0;
-            for(int j=i+1;j<=n;j++)
-                rightsum=rightsum+arr[j];
-            if(leftsum==rightsum)
-                return i;
+
+        for (int i = 1; i <= n; i++) {
+            //part of 1 group:
+            if ((i & number) != 0) {
+                one = one ^ i;
+            }
+            //part of 0 group:
+            else {
+                zero = zero ^ i;
+            }
         }
-        return -1;
+
+        // Last step: Identify the numbers:
+        int cnt = 0;
+        for (int i = 0; i < n; i++) {
+            if (a[i] == zero) cnt++;
+        }
+
+        if (cnt == 2) return new int[] {zero, one};
+        return new int[] {one, zero};
     }
-    public static boolean isBalanced(String expression) {
-    	  if ((expression.length() % 2) == 1) return false;
-    	  else {
-    	    Stack<Character> s = new Stack<>();
-    	    for (char bracket : expression.toCharArray())
-    	      switch (bracket) {
-    	        case '{': s.push('}'); break;
-    	        case '(': s.push(')'); break;
-    	        case '[': s.push(']'); break;
-    	        default :
-    	          if (s.isEmpty() || bracket != s.peek()) { return false;}
-    	          s.pop();
-    	      }
-    	    return s.isEmpty();
-    	  }
-    	}
- public static void main(String[] ar) {
-    	long arr[]= {1,3,5,2,2};
-    	int n=arr.length;
-    	//int maxlength=minJumps(arr,n);
-    	//System.out.println(arr[n-1]);
-    	//System.out.println(maxlength);
-    	//System.out.println(equilibriumPoint(arr));
-    	 Scanner in = new Scanner(System.in);
-    	    String expression = in.nextLine();
-    	    boolean answer = isBalanced(expression);
+
+
+    public static void main(String[] args) {
+        int[] a = {3, 1, 2, 5, 4, 6, 7, 5};
+        int[] ans = findMissingRepeatingNumbers(a);
+        System.out.println("The repeating and missing numbers are: {"
+                           + ans[0] + ", " + ans[1] + "}");
     }
 }
+
+
