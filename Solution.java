@@ -1,67 +1,68 @@
-package codeEx2;
+package codes;
 
+	import java.io.*;
+import java.util.HashMap;
+import java.util.Scanner;
 
+		/*
+		 * private static int findMaxSubArray(int[] arr, int n, int k) { int maxlen=0;
+		 * for(int i=0;i<n;i++) { int sum=0; if(maxlen == n-i) break; for(int
+		 * j=i;j<n;j++) { sum+=arr[j]; if(sum == k) maxlen=Math.max(maxlen, j-i+1); } }
+		 * //System.out.println(maxlen); return maxlen;
+		 * 
+		 * }
+		 */
 
+class Solution{
+    
+  // Function for finding maximum and value pair
+    public static int lenOfLongSubarr (int A[], int N, int K) {
+  HashMap<Integer, Integer> sum_index_map = new HashMap<>();
+        int maxLen = 0;
+        int prefix_sum = 0;
 
-import java.util.*;
+        for (int i = 0; i < N; i++) {
+            prefix_sum += A[i];
 
-public class Solution {
-
-    public static int[] findMissingRepeatingNumbers(int[] a) {
-        int n = a.length; // size of the array
-        int xr = 0;
-
-        //Step 1: Find XOR of all elements:
-        for (int i = 0; i < n; i++) {
-            xr = xr ^ a[i];
-            xr = xr ^ (i + 1);
-        }
-
-        //Step 2: Find the differentiating bit number:
-        int number = (xr & ~(xr - 1));
-
-        //Step 3: Group the numbers:
-        int zero = 0;
-        int one = 0;
-        for (int i = 0; i < n; i++) {
-            //part of 1 group:
-            if ((a[i] & number) != 0) {
-                one = one ^ a[i];
+            if (prefix_sum == K) {
+                maxLen = i + 1;
             }
-            //part of 0 group:
-            else {
-                zero = zero ^ a[i];
-            }
-        }
 
-        for (int i = 1; i <= n; i++) {
-            //part of 1 group:
-            if ((i & number) != 0) {
-                one = one ^ i;
+            else if (sum_index_map.containsKey(prefix_sum - K)) {
+                maxLen = Math.max( maxLen, i - sum_index_map.get(prefix_sum - K));
             }
-            //part of 0 group:
-            else {
-                zero = zero ^ i;
+
+            if (!sum_index_map.containsKey(prefix_sum)) {
+                sum_index_map.put(prefix_sum, i);
             }
         }
 
-        // Last step: Identify the numbers:
-        int cnt = 0;
-        for (int i = 0; i < n; i++) {
-            if (a[i] == zero) cnt++;
-        }
-
-        if (cnt == 2) return new int[] {zero, one};
-        return new int[] {one, zero};
-    }
-
-
-    public static void main(String[] args) {
-        int[] a = {3, 1, 2, 5, 4, 6, 7, 5};
-        int[] ans = findMissingRepeatingNumbers(a);
-        System.out.println("The repeating and missing numbers are: {"
-                           + ans[0] + ", " + ans[1] + "}");
+        return maxLen;
+}
+    static void rotateArr(int arr[], int d, int n) {
+        int p = 1;
+       while (p <= d) {
+           int last = arr[0];
+           for (int i = 0; i < n - 1; i++) {
+               arr[i] = arr[i + 1];
+           }
+           arr[n - 1] = last;
+           p++;
+       }
+      // int i=0;
+       for (int i=0;i<arr.length;i++)
+           System.out.print(arr[i] + " ");
+       
+   }
+    public static void main(String[] arg ) {
+		/*
+		 * int arr[]= {10,5,2,7,1,9}; int k=15; int n=arr.length;
+		 * lenOfLongSubarr(arr,n,k);
+		 */
+    	int arr[]= {1,2,3,4,5};
+    	int n=arr.length , d=22;
+    	rotateArr(arr,d,n);
+    	
     }
 }
-
 
